@@ -3,8 +3,7 @@ package com.cirtual.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.validation.Valid;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -19,6 +18,7 @@ import com.cirtual.service.ChatMessageService;
 import com.cirtual.service.UserService;
 
 @RestController
+@RequestMapping("/chat")
 public class ChatController {
 	
 	@Autowired
@@ -27,11 +27,9 @@ public class ChatController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value = "/chat/getMessage/{recipientId}", method = RequestMethod.GET, produces="application/json")
-	public List<ChatMessage> getMessages(@PathVariable Integer recipientId) {		
-		System.out.println("getMessage for user in controller");
+	@RequestMapping(value = "/getMessage/{recipientId}", method = RequestMethod.GET, produces="application/json")
+	public List<ChatMessage> getMessages(@PathVariable Integer recipientId) {
 		List<ChatMessage> messageList = new ArrayList<>();
-		System.out.println("recipientUserEmail is: " + recipientId);
 		User user = userService.findById(recipientId);
 		if(user == null) {
 			return messageList;
@@ -41,28 +39,30 @@ public class ChatController {
 		return messageList;		
 	}
 	
-	@RequestMapping(value = "/chat/sendMessage", method = RequestMethod.POST)
-	public String createNewUser(@RequestBody Integer authorUserId,  Integer recipientUserId, String message, BindingResult bindingResult) {
-		User authorUser = userService.findById(authorUserId);
-		if(authorUser == null){
-			return "Invalid Author";
+	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
+	public String sendMessage(@RequestBody Map<String, Object> msg, BindingResult bindingResult) {
+		if(msg == null){
+			return "Message text is blank.";
 		}
-		User recipientUser = userService.findById(recipientUserId);
+		User authorUser = userService.findById((Integer)msg.get("authorUserId"));
+		if(authorUser == null){
+			return "Invalid message author";
+		}
+		User recipientUser = userService.findById((Integer)msg.get("recipientUserId"));
 		if(recipientUser == null){
 			return "Invalid Recipient User";
 		}
 		if (bindingResult.hasErrors()) {
-			return "There is some error while registration of the user.";
+			return "There is some error sending the message.";
 		} else {
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setAuthorUser(authorUser);
 			chatMessage.setRecipientUser(recipientUser);
-			chatMessage.setMessage(message);
+			chatMessage.setMessage((String)msg.get("message"));			
 			chatMessage.setTimestamp(new Date());
 			chatMessageService.saveChatMessage(chatMessage);
 			String res = "The new chat id is: " + chatMessage.getId();
 			return res;
 		}
-	}
-	
+	}	
 }

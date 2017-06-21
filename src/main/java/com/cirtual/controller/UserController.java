@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired
@@ -37,7 +37,7 @@ public class UserController {
 		}
 	}
 	
-	/*@RequestMapping(value = "/register", method = RequestMethod.PUT)
+	/*@RequestMapping(value = "/editProfile", method = RequestMethod.PUT)
 	public String editUser(@RequestBody @Valid User user, BindingResult bindingResult) {
 		System.out.println("got in controller");
 		User userExists = userService.findUserByEmail(user.getEmail());
@@ -56,9 +56,7 @@ public class UserController {
 	@RequestMapping(value = "/getUsers", method = RequestMethod.GET)
 	public List<String> getUsersList() {
 		System.out.println("getUsersList in controller");
-		return null;
-		
-	}
-	
+		return null;		
+	}	
 }
 

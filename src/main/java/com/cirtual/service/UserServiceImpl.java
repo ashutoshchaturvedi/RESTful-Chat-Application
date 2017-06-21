@@ -23,11 +23,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	public void saveUser(User user) {
-		System.out.println("here in service impl");
-		System.out.println(user.getPassword());
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-   //     Role userRole = roleRepository.findByRole("ADMIN");
-   //     user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
 

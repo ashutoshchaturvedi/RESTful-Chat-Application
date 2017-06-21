@@ -1,6 +1,9 @@
 package com.cirtual.entity;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 @Entity
@@ -13,10 +16,12 @@ public class ChatMessage {
 	
 	@OneToOne
     @JoinColumn(name = "authorUserId")
+	@JsonProperty("authorUserId")
 	private User authorUser;
 	
 	@OneToOne
     @JoinColumn(name = "recipientUserId")
+	@JsonProperty("recipientUserId")
 	private User recipientUser;
 	
 	private String message;
