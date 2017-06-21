@@ -5,4 +5,4 @@ A RESTful Chat Application developed using:
 * My SQL
 * Spring Security
 
-#### Refer to Wiki pages for application details, usage and endpoint informations.
+#### Refer to [Wiki](https://github.com/ashutoshchaturvedi/RESTful-Chat-Application/wiki) pages for application details, usage and endpoint informations.
