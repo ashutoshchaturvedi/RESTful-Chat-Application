@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,14 +28,14 @@ public class ChatController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value = "/getMessage/{recipientId}", method = RequestMethod.GET, produces="application/json")
-	public List<ChatMessage> getMessages(@PathVariable Integer recipientId) {
+	@RequestMapping(value = "/getMessage", method = RequestMethod.GET, produces="application/json")
+	public List<ChatMessage> getMessages() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findUserByEmail(authentication.getName());
 		List<ChatMessage> messageList = new ArrayList<>();
-		User user = userService.findById(recipientId);
 		if(user == null) {
 			return messageList;
-		}
-		
+		}		
 		messageList = chatMessageService.findMessageByAuthorUser(user);
 		return messageList;		
 	}
