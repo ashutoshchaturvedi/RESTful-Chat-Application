@@ -8,7 +8,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,15 +25,27 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	public String getUserDetails(@PathVariable Integer id){
+		if(userService.exists(id)){
+			return userService.findById(id).toString();
+		}
+		return "The user id does not exists.";
+	}
+	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String createNewUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-		System.out.println("got in controller");
 		User userExists = userService.findUserByEmail(user.getEmail());
 		if (userExists != null) {
 			return "There is already a user registered with the email provided";
 		}
 		if (bindingResult.hasErrors()) {
-			return "There is some error while registration of the user.";
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			StringBuilder sb = new StringBuilder();
+		    for (FieldError error : errors ) {
+		        sb.append(error.getObjectName()).append(error.getDefaultMessage());
+		    }
+			return sb.toString();
 		} else {
 			userService.saveUser(user);
 			String res = "The new user id is: " + user.getId();
@@ -37,26 +53,21 @@ public class UserController {
 		}
 	}
 	
-	/*@RequestMapping(value = "/editProfile", method = RequestMethod.PUT)
-	public String editUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-		System.out.println("got in controller");
-		User userExists = userService.findUserByEmail(user.getEmail());
-		if (userExists != null) {
-			return "There is already a user registered with the email provided";
-		}
-		if (bindingResult.hasErrors()) {
-			return "There is some error while registration of the user.";
-		} else {
-			userService.saveUser(user);
-			String res = "The new user id is: " + user.getId();
+	@RequestMapping(value = "/editProfile/{id}", method = RequestMethod.PUT)
+	public String editUser(@PathVariable Integer id, @RequestBody  @Valid User user, BindingResult bindingResult) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(userService.validateUser(authentication, id)){
+			userService.updateUser(id,user);
+			String res = "The updated user id is: " + id;
 			return res;
 		}
-	}*/
+		return "Only profile owner can edit his/her own profile";
+	}
 	
 	@RequestMapping(value = "/getUsers", method = RequestMethod.GET)
-	public List<String> getUsersList() {
+	public List<User> getUsersList() {
 		System.out.println("getUsersList in controller");
-		return null;		
+		return userService.getAllUsers();		
 	}	
 }
 
