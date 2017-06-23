@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cirtual.service.UserService#saveUser(com.cirtual.entity.User)
+	 */
 	@Override
 	public void saveUser(User user) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -47,6 +50,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userRepository.save(user);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.cirtual.service.UserService#getAllUsers()
+	 */
 	@Override
 	public List<User> getAllUsers() {
 		List<User> result = new ArrayList<>();
@@ -103,6 +109,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cirtual.service.UserService#validateUser(org.springframework.security.core.Authentication, java.lang.Integer)
+	 */
 	@Override
 	public boolean validateUser(Authentication authentication, Integer id) {
 		if(authentication.getName().equalsIgnoreCase("anonymousUser")){
