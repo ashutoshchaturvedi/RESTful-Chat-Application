@@ -19,61 +19,65 @@ import com.cirtual.service.ChatMessageService;
 import com.cirtual.service.UserService;
 
 /**
- * The controller class for all the requests coming on /chat/ path.
- * The class makes use of ChatMessageService and UserService by auto wiring them.
+ * The controller class for all the requests coming on /chat/ path. The class
+ * makes use of ChatMessageService and UserService by auto wiring them.
+ * 
  * @author ashutosh
  *
  */
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
-	
+
 	@Autowired
 	private ChatMessageService chatMessageService;
-	
+
 	@Autowired
 	private UserService userService;
-	
-	@RequestMapping(value = "/getMessage", method = RequestMethod.GET, produces="application/json")
+
+	@RequestMapping(value = "/getMessage", method = RequestMethod.GET, produces = "application/json")
 	public List<ChatMessage> getMessages() throws Exception {
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(authentication.getName());
-		List<ChatMessage> messageList = new ArrayList<>();
-		if(user == null) {
-			throw new Exception("Invalid user, please provide correct user credentials.");
-		}		
-		messageList = chatMessageService.findMessageByAuthorUser(user);
-		return messageList;		
-	}
-	
-	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
-	public String sendMessage(@RequestBody Map<String, Object> msg, BindingResult bindingResult) throws Exception {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = userService.findUserByEmail(authentication.getName());
-		if(user == null) {
+		if (user == null) {
 			throw new Exception("Invalid user, please provide correct user credentials.");
 		}
-		if(msg == null){
+
+		List<ChatMessage> messageList = new ArrayList<>();
+		messageList = chatMessageService.findMessageByAuthorUser(user);
+		return messageList;
+	}
+
+	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
+	public String sendMessage(@RequestBody Map<String, Object> msg, BindingResult bindingResult) throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findUserByEmail(authentication.getName());
+		if (user == null) {
+			throw new Exception("Invalid user, please provide correct user credentials.");
+		}
+
+		if (msg == null) {
 			return "Message text is blank.";
 		}
 
-		User recipientUser = userService.findById((Integer)msg.get("recipientUserId"));
-		if(recipientUser == null){
+		User recipientUser = userService.findById((Integer) msg.get("recipientUserId"));
+		if (recipientUser == null) {
 			return "Invalid Recipient User";
 		}
+
 		if (bindingResult.hasErrors()) {
 			return "There is some error sending the message.";
-		}
-		else {
+		} else {
 			ChatMessage chatMessage = new ChatMessage();
 			chatMessage.setAuthorUser(user);
 			chatMessage.setRecipientUser(recipientUser);
-			chatMessage.setMessage((String)msg.get("message"));			
+			chatMessage.setMessage((String) msg.get("message"));
 			chatMessage.setTimestamp(new Date());
 			chatMessageService.saveChatMessage(chatMessage);
 			String res = "Message Posted";
 			return res;
 		}
-
-	}	
+	}
 }

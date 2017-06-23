@@ -27,18 +27,22 @@ public class UserController {
 	
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	public String getUserDetails(@PathVariable Integer id){
+		
 		if(userService.exists(id)){
 			return userService.findById(id).toString();
 		}
+		
 		return "The user id does not exists.";
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String createNewUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+		
 		User userExists = userService.findUserByEmail(user.getEmail());
 		if (userExists != null) {
 			return "There is already a user registered with the email provided";
 		}
+		
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			StringBuilder sb = new StringBuilder();
@@ -48,18 +52,20 @@ public class UserController {
 			return sb.toString();
 		} else {
 			userService.saveUser(user);
-			String res = "User registered! The new user id is: " + user.getId();
-			return res;
+			return ("User registered! The new user id is: " + user.getId());
 		}
 	}
 	
 	@RequestMapping(value = "/editProfile/{id}", method = RequestMethod.PUT)
 	public String editUser(@PathVariable Integer id, @RequestBody  @Valid User user, BindingResult bindingResult) {
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		if(userService.validateUser(authentication, id)){
 			userService.updateUser(id,user);
 			return "User updated successfully";
 		}
+		
 		return "Only profile owner can edit his/her own profile";
 	}
 	
