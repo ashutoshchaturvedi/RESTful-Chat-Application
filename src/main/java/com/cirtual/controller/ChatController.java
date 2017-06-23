@@ -35,23 +35,23 @@ public class ChatController {
 	private UserService userService;
 	
 	@RequestMapping(value = "/getMessage", method = RequestMethod.GET, produces="application/json")
-	public List<ChatMessage> getMessages() {
+	public List<ChatMessage> getMessages() throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(authentication.getName());
 		List<ChatMessage> messageList = new ArrayList<>();
 		if(user == null) {
-			return messageList;
+			throw new Exception("Invalid user, please provide correct user credentials.");
 		}		
 		messageList = chatMessageService.findMessageByAuthorUser(user);
 		return messageList;		
 	}
 	
 	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
-	public String sendMessage(@RequestBody Map<String, Object> msg, BindingResult bindingResult) {
+	public String sendMessage(@RequestBody Map<String, Object> msg, BindingResult bindingResult) throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(authentication.getName());
 		if(user == null) {
-			return "Please provide credentials for sending messages";
+			throw new Exception("Invalid user, please provide correct user credentials.");
 		}
 		if(msg == null){
 			return "Message text is blank.";
