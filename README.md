@@ -11,6 +11,7 @@ A RESTful Chat Application developed using:
 There are two ways to run this application, through the pre-built jar or by importing the project in choice of IDE.  
 ### Pre-requisites  
 * My SQL Server running on port 3306 (or update application.properties under resources if running from IDE)
+* Import the schema in My SQL. The mysqldump is present [here](https://github.com/ashutoshchaturvedi/RESTful-Chat-Application/blob/master/Deliverables/MySQLDump.sql)
 * The embedded tomcat server will run on port 8080, make sure it is free.
 ### Through Jar  
 1. Download the Jar file ChatApplication-1.0-SNAPSHOT.jar
