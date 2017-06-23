@@ -7,10 +7,11 @@
 *.o
 *.so
 
-# Not required files #
+# Folders not to be pushed #
 ######################
 .idea
 .settings
 target
 .classpath
 .project
+bin

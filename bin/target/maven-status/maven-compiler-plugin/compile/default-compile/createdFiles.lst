@@ -1,6 +1,0 @@
-com/cirtual/security/SpringSecurityConfig.class
-com/cirtual/entity/ChatMessage.class
-com/cirtual/Application.class
-com/cirtual/restrepository/UserRepository.class
-com/cirtual/controller/UserController.class
-com/cirtual/entity/User.class
