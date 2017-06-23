@@ -33,4 +33,12 @@ Below steps are for Eclipse IDE
 8. Click Next.
 9. Click Finish.  
 * If need to change the tomcat server port, modify server.port in application.properties
-10. Run ChatApplication.java present under com.cirtual package as Java Application.
+10. Run ChatApplication.java present under com.cirtual package as Java Application.  
+***  
+
+## Future work/ToDo  
+- [ ] Change HTTP Basic auth to OAuth  
+- [ ] Add more JUnit testing for Services and Repositories
+- [ ] Build UI
+- [ ] Include WebSocket for runtime polling of chat messages.
+- [ ] Notification to recipient user when new message is received.
