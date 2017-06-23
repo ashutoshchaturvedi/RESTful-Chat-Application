@@ -6,6 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * The model class for User Role. 
+ * The class definition contains getter and setters along with java persistence Annotations.
+ * @author ashutosh
+ *
+ */
+
 @Entity
 public class Role {
 	@Id

@@ -48,10 +48,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 	
 	@Override
+	public List<User> getAllUsers() {
+		List<User> result = new ArrayList<>();
+		for(User user : userRepository.findAll()){
+			result.add(user);
+		}
+		return result;
+	}
+	
+	@Override
+	public User findById(Integer id) {
+		return userRepository.findById(id);
+	}
+
+	@Override
+	public boolean exists(Integer id) {
+		return userRepository.exists(id);
+	}
+	
+	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user = userRepository.findByEmail(email);
-		System.out.println("found user in impl");
 		List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
 		return buildUserForAuthentication(user, authorities);
 	}
@@ -68,18 +86,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
-		System.out.println("building user for auth");
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true, true, true, authorities);
-	}
-
-	@Override
-	public User findById(Integer id) {
-		return userRepository.findById(id);
-	}
-
-	@Override
-	public boolean exists(Integer id) {
-		return userRepository.exists(id);
 	}
 	
 	@Override
@@ -103,15 +110,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		return userRepository.findByEmail(authentication.getName()).getId() == id;
 	}
-
-	@Override
-	public List<User> getAllUsers() {
-		List<User> result = new ArrayList<>();
-		for(User user : userRepository.findAll()){
-			result.add(user);
-		}
-		return result;
-	}
-	
 	
 }

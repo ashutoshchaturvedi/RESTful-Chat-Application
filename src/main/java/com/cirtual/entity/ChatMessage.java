@@ -3,8 +3,16 @@ package com.cirtual.entity;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import java.util.Date;
+
+/**
+ * The model class for Chat Message. 
+ * The class definition contains getter and setters along with java persistence Annotations.
+ * @author ashutosh
+ *
+ */
 
 @Entity
 @Table(name="chat")
@@ -21,7 +29,7 @@ public class ChatMessage {
 	
 	@OneToOne
     @JoinColumn(name = "recipientUserId")
-	@JsonProperty("recipientUserId")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private User recipientUser;
 	
 	private String message;
@@ -68,6 +76,4 @@ public class ChatMessage {
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
-
-
 }

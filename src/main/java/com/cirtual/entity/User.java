@@ -19,6 +19,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+/**
+ * The model class for User. 
+ * The class definition contains getter and setters along with java persistence Annotations.
+ * A User can have multiple Roles
+ * @author ashutosh
+ *
+ */
 @Entity
 public class User {
 
@@ -27,19 +34,19 @@ public class User {
     @Column(name="user_id")
     private Integer id;
     
-    @Email(message = "*Please provide a valid Email")
-	@NotEmpty(message = "*Please provide an email")
+    @Email(message = " Please provide a valid Email")
+	@NotEmpty(message = " Please provide an email")
 	private String email;
     
-    @Length(min = 5, message = "*Your password must have at least 5 characters")
-	@NotEmpty(message = "*Please provide your password")
+    @Length(min = 5, message = " Your password must have at least 5 characters")
+	@NotEmpty(message = " Please provide your password")
     @JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
-    @NotEmpty(message = "*Please provide your name")
+    @NotEmpty(message = " Please provide your name")
     private String firstName;
     
-    @NotEmpty(message = "*Please provide your last name")
+    @NotEmpty(message = " Please provide your last name")
     private String lastName;
     
     @ManyToMany(cascade = CascadeType.ALL)

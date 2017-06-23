@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 	
 	@Autowired
@@ -48,7 +48,7 @@ public class UserController {
 			return sb.toString();
 		} else {
 			userService.saveUser(user);
-			String res = "The new user id is: " + user.getId();
+			String res = "User registered! The new user id is: " + user.getId();
 			return res;
 		}
 	}
@@ -58,15 +58,13 @@ public class UserController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(userService.validateUser(authentication, id)){
 			userService.updateUser(id,user);
-			String res = "The updated user id is: " + id;
-			return res;
+			return "User updated successfully";
 		}
 		return "Only profile owner can edit his/her own profile";
 	}
 	
 	@RequestMapping(value = "/getUsers", method = RequestMethod.GET)
 	public List<User> getUsersList() {
-		System.out.println("getUsersList in controller");
 		return userService.getAllUsers();		
 	}	
 }

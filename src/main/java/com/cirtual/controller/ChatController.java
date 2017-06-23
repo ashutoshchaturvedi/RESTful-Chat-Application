@@ -18,8 +18,14 @@ import com.cirtual.entity.User;
 import com.cirtual.service.ChatMessageService;
 import com.cirtual.service.UserService;
 
+/**
+ * The controller class for all the requests coming on /chat/ path.
+ * The class makes use of ChatMessageService and UserService by auto wiring them.
+ * @author ashutosh
+ *
+ */
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
 public class ChatController {
 	
 	@Autowired
@@ -42,28 +48,32 @@ public class ChatController {
 	
 	@RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
 	public String sendMessage(@RequestBody Map<String, Object> msg, BindingResult bindingResult) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findUserByEmail(authentication.getName());
+		if(user == null) {
+			return "Please provide credentials for sending messages";
+		}
 		if(msg == null){
 			return "Message text is blank.";
 		}
-		User authorUser = userService.findById((Integer)msg.get("authorUserId"));
-		if(authorUser == null){
-			return "Invalid message author";
-		}
+
 		User recipientUser = userService.findById((Integer)msg.get("recipientUserId"));
 		if(recipientUser == null){
 			return "Invalid Recipient User";
 		}
 		if (bindingResult.hasErrors()) {
 			return "There is some error sending the message.";
-		} else {
+		}
+		else {
 			ChatMessage chatMessage = new ChatMessage();
-			chatMessage.setAuthorUser(authorUser);
+			chatMessage.setAuthorUser(user);
 			chatMessage.setRecipientUser(recipientUser);
 			chatMessage.setMessage((String)msg.get("message"));			
 			chatMessage.setTimestamp(new Date());
 			chatMessageService.saveChatMessage(chatMessage);
-			String res = "The new chat id is: " + chatMessage.getId();
+			String res = "Message Posted";
 			return res;
 		}
+
 	}	
 }
