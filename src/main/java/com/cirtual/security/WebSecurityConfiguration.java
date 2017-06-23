@@ -10,9 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * Security Configuration class for Chat Application.
- * The class implements the security configuration by extending WebSecurityConfigurerAdapter.
- * It implements the methods to authenticate and authorize users.
+ * Security Configuration class for Chat Application. The class implements the
+ * security configuration by extending WebSecurityConfigurerAdapter. It
+ * implements the methods to authenticate and authorize users.
+ * 
  * @author ashutosh
  *
  */
@@ -24,26 +25,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
 	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Autowired
-	protected void configure(AuthenticationManagerBuilder auth)
-			throws Exception {
-		auth
-			.userDetailsService(userDetailsService)
-			.passwordEncoder(bCryptPasswordEncoder);
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-        .httpBasic().and()
-        .authorizeRequests()
-        	.antMatchers("/").permitAll()
-        	.antMatchers("/api/users/*").permitAll()
-            .anyRequest().authenticated();
+		http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/api/users/*").permitAll().anyRequest().authenticated();
 	}
-	
+
 }

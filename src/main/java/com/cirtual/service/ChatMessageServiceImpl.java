@@ -17,37 +17,43 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
 	@Autowired
 	ChatMessageRepository chatMessageRepository;
-	
+
 	@Autowired
 	UserRepository userRepository;
-	
-	/* (non-Javadoc)
-	 * @see com.cirtual.service.ChatMessageService#findMessageByAuthorUser(com.cirtual.entity.User)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.cirtual.service.ChatMessageService#findMessageByAuthorUser(com.
+	 * cirtual.entity.User)
 	 */
 	@Override
 	public List<ChatMessage> findMessageByAuthorUser(User authorUser) {
 		return chatMessageRepository.findByrecipientUser(authorUser);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cirtual.service.ChatMessageService#saveChatMessage(com.cirtual.entity.ChatMessage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cirtual.service.ChatMessageService#saveChatMessage(com.cirtual.entity
+	 * .ChatMessage)
 	 */
 	@Override
 	public void saveChatMessage(ChatMessage chatMessage) {
 		chatMessageRepository.save(chatMessage);
 	}
 
-	
-	public String validateAndsaveChatMessage(Map<String, Object> requestMessage, User sender){
+	public String validateAndsaveChatMessage(Map<String, Object> requestMessage, User sender) {
 		User recipientUser = userRepository.findById((Integer) requestMessage.get("recipientUserId"));
 		if (recipientUser == null) {
 			return "Invalid Recipient User";
 		}
-		
+
 		if (requestMessage.get("message") == null) {
 			return "Message text is blank.";
 		}
-		
+
 		ChatMessage chatMessage = new ChatMessage();
 		chatMessage.setAuthorUser(sender);
 		chatMessage.setRecipientUser(recipientUser);

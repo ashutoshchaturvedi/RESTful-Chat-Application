@@ -6,8 +6,9 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- * Class to setup the global security configuration parameters.
- * Provides the password encoder BCryptPasswordEncoder
+ * Class to setup the global security configuration parameters. Provides the
+ * password encoder BCryptPasswordEncoder
+ * 
  * @author ashutosh
  *
  */

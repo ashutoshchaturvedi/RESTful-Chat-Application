@@ -29,17 +29,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-    private RoleRepository roleRepository;
-	
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private RoleRepository roleRepository;
 
-    @Override
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Override
 	public User findUserByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cirtual.service.UserService#saveUser(com.cirtual.entity.User)
 	 */
 	@Override
@@ -49,19 +51,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.cirtual.service.UserService#getAllUsers()
 	 */
 	@Override
 	public List<User> getAllUsers() {
 		List<User> result = new ArrayList<>();
-		for(User user : userRepository.findAll()){
+		for (User user : userRepository.findAll()) {
 			result.add(user);
 		}
 		return result;
 	}
-	
+
 	@Override
 	public User findById(Integer id) {
 		return userRepository.findById(id);
@@ -71,7 +75,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public boolean exists(Integer id) {
 		return userRepository.exists(id);
 	}
-	
+
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -92,32 +96,37 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true, true, true, authorities);
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true,
+				true, true, authorities);
 	}
-	
+
 	@Override
 	public void updateUser(Integer id, User user) {
-		if(exists(id)){
+		if (exists(id)) {
 			User user1 = findById(id);
-			if(user.getFirstName()!=null){
+			if (user.getFirstName() != null) {
 				user1.setFirstName(user.getFirstName());
 			}
-			if(user1.getLastName()!=null){
+			if (user1.getLastName() != null) {
 				user1.setLastName(user.getLastName());
 			}
 			userRepository.save(user1);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.cirtual.service.UserService#validateUser(org.springframework.security.core.Authentication, java.lang.Integer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.cirtual.service.UserService#validateUser(org.springframework.security
+	 * .core.Authentication, java.lang.Integer)
 	 */
 	@Override
 	public boolean validateUser(Authentication authentication, Integer id) {
-		if(authentication.getName().equalsIgnoreCase("anonymousUser")){
+		if (authentication.getName().equalsIgnoreCase("anonymousUser")) {
 			return false;
 		}
 		return userRepository.findByEmail(authentication.getName()).getId() == id;
 	}
-	
+
 }
