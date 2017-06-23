@@ -36,7 +36,7 @@ Below steps are for Eclipse IDE
 10. Run ChatApplication.java present under com.cirtual package as Java Application.  
 ***  
 
-## Future work/ToDo  
+## Future work / ToDo  
 - [ ] Change HTTP Basic auth to OAuth  
 - [ ] Add more JUnit testing for Services and Repositories
 - [ ] Build UI
